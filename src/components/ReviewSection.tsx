@@ -197,7 +197,7 @@ export const ReviewSection: React.FC<ReviewSectionProps> = ({ reviews, onAddRevi
             </button>
 
             <h3 className="font-serif text-xl font-bold text-[#3D1E28] mb-1">
-              Share Your FloraCharm Experience
+              Share Your FreshFlora Experience
             </h3>
             <p className="text-xs text-[#735A63] mb-4">
               Your review helps other flower lovers select the best fresh blooms.

@@ -65,7 +65,7 @@ export const ContactSection: React.FC = () => {
                 </div>
                 <div>
                   <h4 className="font-serif font-bold text-sm text-[#3D1E28]">Customer Support Email</h4>
-                  <p className="text-xs text-[#735A63]">concierge@floracharm.com</p>
+                  <p className="text-xs text-[#735A63]">concierge@freshflora.com</p>
                 </div>
               </div>
 

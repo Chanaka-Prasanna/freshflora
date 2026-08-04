@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Flower, CartItem, User, Order, FilterState, Review } from './types';
-import { FLOWERS } from './data/flowers';
 import { REVIEWS as INITIAL_REVIEWS } from './data/reviews';
 
 import { Header } from './components/Header';
@@ -8,6 +7,7 @@ import { Footer } from './components/Footer';
 import { HomePage } from './pages/HomePage';
 import { FlowersPage } from './pages/FlowersPage';
 import { PrivacyPage } from './pages/PrivacyPage';
+import { OrdersPage } from './pages/OrdersPage';
 
 import { FlowerDetailModal } from './components/FlowerDetailModal';
 import { CartDrawer } from './components/CartDrawer';
@@ -15,12 +15,38 @@ import { CheckoutModal } from './components/CheckoutModal';
 import { AuthModal } from './components/AuthModal';
 
 export default function App() {
-  const [currentPage, setCurrentPage] = useState<'home' | 'flowers' | 'privacy'>('home');
+  const [currentPage, setCurrentPage] = useState<'home' | 'flowers' | 'privacy' | 'orders'>(() => {
+    const path = window.location.pathname.replace('/', '');
+    if (['flowers', 'privacy', 'orders'].includes(path)) {
+      return path as any;
+    }
+    return 'home';
+  });
+
+  useEffect(() => {
+    const path = currentPage === 'home' ? '/' : `/${currentPage}`;
+    if (window.location.pathname !== path) {
+      window.history.pushState(null, '', path);
+    }
+  }, [currentPage]);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      const path = window.location.pathname.replace('/', '');
+      if (['flowers', 'privacy', 'orders'].includes(path)) {
+        setCurrentPage(path as any);
+      } else {
+        setCurrentPage('home');
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
   
   // Cart state
   const [cartItems, setCartItems] = useState<CartItem[]>(() => {
     try {
-      const saved = localStorage.getItem('floracharm_cart');
+      const saved = localStorage.getItem('freshflora_cart');
       return saved ? JSON.parse(saved) : [];
     } catch {
       return [];
@@ -29,7 +55,7 @@ export default function App() {
 
   useEffect(() => {
     try {
-      localStorage.setItem('floracharm_cart', JSON.stringify(cartItems));
+      localStorage.setItem('freshflora_cart', JSON.stringify(cartItems));
     } catch (e) {
       console.error(e);
     }
@@ -47,7 +73,7 @@ export default function App() {
   // Auth User
   const [user, setUser] = useState<User | null>(() => {
     try {
-      const saved = localStorage.getItem('floracharm_user');
+      const saved = localStorage.getItem('freshflora_user');
       return saved ? JSON.parse(saved) : null;
     } catch {
       return null;
@@ -57,7 +83,7 @@ export default function App() {
   const handleLogin = (newUser: User) => {
     setUser(newUser);
     try {
-      localStorage.setItem('floracharm_user', JSON.stringify(newUser));
+      localStorage.setItem('freshflora_user', JSON.stringify(newUser));
     } catch (e) {
       console.error(e);
     }
@@ -65,7 +91,7 @@ export default function App() {
 
   const handleLogout = () => {
     setUser(null);
-    localStorage.removeItem('floracharm_user');
+    localStorage.removeItem('freshflora_user');
   };
 
   // Reviews State
@@ -94,39 +120,29 @@ export default function App() {
     });
   };
 
-  // Filtered & Sorted Flowers Calculation
-  const filteredFlowers = useMemo(() => {
-    return FLOWERS.filter((flower) => {
-      // Category filter
-      if (filters.category !== 'All' && flower.category !== filters.category) {
-        return false;
-      }
-      // Price filter
-      if (flower.price > filters.maxPrice) {
-        return false;
-      }
-      // Availability status filter
-      if (filters.availability !== 'All' && flower.availability !== filters.availability) {
-        return false;
-      }
-      // Search query filter
-      if (filters.searchQuery.trim()) {
-        const query = filters.searchQuery.toLowerCase();
-        const matchesTitle = flower.title.toLowerCase().includes(query);
-        const matchesDesc = flower.description.toLowerCase().includes(query);
-        const matchesColor = flower.flowerColor.toLowerCase().includes(query);
-        const matchesCategory = flower.category.toLowerCase().includes(query);
-        if (!matchesTitle && !matchesDesc && !matchesColor && !matchesCategory) {
-          return false;
-        }
-      }
-      return true;
-    }).sort((a, b) => {
-      if (filters.sortBy === 'price-low') return a.price - b.price;
-      if (filters.sortBy === 'price-high') return b.price - a.price;
-      if (filters.sortBy === 'rating') return b.rating - a.rating;
-      return b.ordersCount - a.ordersCount; // popular default
+  // Backend API Integration
+  const [hotFlowers, setHotFlowers] = useState<Flower[]>([]);
+  const [filteredFlowers, setFilteredFlowers] = useState<Flower[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    import('./services/api').then(({ api }) => {
+      api.getHotProducts().then(setHotFlowers).catch(console.error);
     });
+  }, []);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setIsLoading(true);
+      import('./services/api').then(({ api }) => {
+        api.getProducts(filters)
+          .then(data => setFilteredFlowers(data.items))
+          .catch(console.error)
+          .finally(() => setIsLoading(false));
+      });
+    }, 400); // 400ms debounce
+
+    return () => clearTimeout(handler);
   }, [filters]);
 
   // Cart operations
@@ -196,7 +212,8 @@ export default function App() {
       <main className="flex-1">
         {currentPage === 'home' && (
           <HomePage
-            flowers={FLOWERS}
+            flowers={hotFlowers}
+            isLoading={isLoading}
             onAddToCart={(f) => handleAddToCart(f)}
             onBuyNow={(f) => handleBuyNow(f)}
             onQuickView={(f) => setSelectedFlower(f)}
@@ -214,7 +231,8 @@ export default function App() {
 
         {currentPage === 'flowers' && (
           <FlowersPage
-            flowers={FLOWERS}
+            flowers={filteredFlowers}
+            isLoading={isLoading}
             onAddToCart={(f) => handleAddToCart(f)}
             onBuyNow={(f) => handleBuyNow(f)}
             onQuickView={(f) => setSelectedFlower(f)}
@@ -226,6 +244,15 @@ export default function App() {
         )}
 
         {currentPage === 'privacy' && <PrivacyPage />}
+
+        {currentPage === 'orders' && (
+          <OrdersPage 
+            onNavigateToCatalog={() => {
+              setCurrentPage('flowers');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+          />
+        )}
       </main>
 
       {/* Footer */}

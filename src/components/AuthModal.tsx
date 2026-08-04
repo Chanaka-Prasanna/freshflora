@@ -23,9 +23,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
@@ -42,24 +44,29 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       return;
     }
 
-    const loggedUser: UserType = {
-      id: 'usr_' + Date.now(),
-      name: mode === 'signup' ? name : email.split('@')[0].replace('.', ' '),
-      email,
-    };
-
-    onLogin(loggedUser);
-    onClose();
-  };
-
-  const handleDemoLogin = () => {
-    const demoUser: UserType = {
-      id: 'usr_demo_882',
-      name: 'Rose Montclaire',
-      email: 'rose.montclaire@example.com',
-    };
-    onLogin(demoUser);
-    onClose();
+    setIsSubmitting(true);
+    try {
+      const { api } = await import('../services/api');
+      if (mode === 'signup') {
+        const data = await api.register({ name, email, password });
+        localStorage.setItem('freshflora_token', data.access_token);
+        onLogin({ id: 'new_user', name, email });
+      } else {
+        const data = await api.login({ email, password });
+        localStorage.setItem('freshflora_token', data.access_token);
+        onLogin({ id: 'user', name: email.split('@')[0], email });
+      }
+      onClose();
+    } catch (err: any) {
+      try {
+        const parsed = JSON.parse(err.message);
+        setError(parsed.detail || 'Authentication failed');
+      } catch {
+        setError(err.message || 'Authentication failed');
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -208,22 +215,17 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
                 <button
                   type="submit"
-                  className="w-full py-2.5 rounded-full bg-[#E86F80] hover:bg-[#d65f70] text-white font-bold text-xs shadow-md transition-all active:scale-95"
+                  disabled={isSubmitting}
+                  className={`w-full py-2.5 rounded-full text-white font-bold text-xs shadow-md transition-all active:scale-95 flex items-center justify-center gap-2
+                    ${isSubmitting ? 'bg-[#d65f70] opacity-80 cursor-not-allowed' : 'bg-[#E86F80] hover:bg-[#d65f70]'}`}
                 >
+                  {isSubmitting && (
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  )}
                   {mode === 'signin' ? 'Sign In to Account' : 'Create Free Account'}
                 </button>
               </form>
 
-              {/* Demo Account Preset */}
-              <div className="mt-4 pt-4 border-t border-[#FCE8EF] text-center">
-                <button
-                  onClick={handleDemoLogin}
-                  className="text-xs font-semibold text-[#8C1C40] hover:underline flex items-center justify-center gap-1.5 mx-auto"
-                >
-                  <Sparkles className="w-3.5 h-3.5 text-[#C83863]" />
-                  Quick Demo Login as Rose Montclaire
-                </button>
-              </div>
             </div>
           )}
         </div>

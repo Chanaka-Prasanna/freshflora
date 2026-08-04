@@ -9,6 +9,7 @@ import { REVIEWS } from '../data/reviews';
 
 interface HomePageProps {
   flowers: Flower[];
+  isLoading?: boolean;
   onAddToCart: (flower: Flower) => void;
   onBuyNow: (flower: Flower) => void;
   onQuickView: (flower: Flower) => void;
@@ -22,6 +23,7 @@ interface HomePageProps {
 
 export const HomePage: React.FC<HomePageProps> = ({
   flowers,
+  isLoading = false,
   onAddToCart,
   onBuyNow,
   onQuickView,
@@ -188,7 +190,12 @@ export const HomePage: React.FC<HomePageProps> = ({
         />
 
         {/* Display filtered products */}
-        {filteredFlowers.length === 0 ? (
+        {isLoading ? (
+          <div className="py-12 text-center">
+            <div className="w-8 h-8 mx-auto border-4 border-[#FDE2E4] border-t-[#C83863] rounded-full animate-spin"></div>
+            <p className="mt-4 text-xs font-bold text-[#4A3B3B]">Loading Fresh Blooms...</p>
+          </div>
+        ) : filteredFlowers.length === 0 ? (
           <div className="text-center py-12 bg-white rounded-2xl border border-[#FDE2E4] p-8">
             <div className="text-4xl mb-3">🌺</div>
             <h3 className="font-serif text-lg font-bold text-[#4A3B3B] mb-1">

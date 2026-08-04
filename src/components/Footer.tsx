@@ -50,7 +50,7 @@ export const Footer: React.FC<FooterProps> = ({ setCurrentPage }) => {
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <span className="text-xl text-[#E86F80]">✿</span>
-              <span className="font-serif italic text-xl font-bold text-[#E86F80] tracking-tight">FloraCharm</span>
+              <span className="font-serif italic text-xl font-bold text-[#E86F80] tracking-tight">FreshFlora</span>
             </div>
             <p className="text-xs text-gray-300 leading-relaxed">
               An artisan flower boutique dedicated to spreading joy through fresh Ecuadorian roses, Dutch tulips, and seasonal garden blooms.
@@ -140,7 +140,7 @@ export const Footer: React.FC<FooterProps> = ({ setCurrentPage }) => {
 
         {/* Bottom Rights Bar */}
         <div className="pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between text-[11px] text-gray-400 gap-4">
-          <p>© 2026 FloraCharm (Petals & Prose). Handcrafted with care.</p>
+          <p>© 2026 FreshFlora (Petals & Prose). Handcrafted with care.</p>
           <div className="flex items-center gap-4 text-[11px]">
             <button onClick={() => setCurrentPage('privacy')} className="hover:text-white">
               Privacy

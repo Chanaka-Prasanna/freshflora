@@ -81,31 +81,47 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
       setProcessingStatus('Authorizing $ ' + grandTotal.toFixed(2) + ' payment with issuing bank...');
     }, 2400);
 
-    setTimeout(() => {
+    setTimeout(async () => {
       setProcessingStatus('Securing delivery reservation...');
+      
+      try {
+        const { api } = await import('../services/api');
+        const orderData = {
+          total_amount: grandTotal,
+          items: cartItems.map(item => ({
+            product_id: item.flower.id,
+            quantity: item.quantity,
+            price: item.flower.price
+          }))
+        };
+        
+        const backendOrder = await api.createOrder(orderData);
+        
+        const newOrder: Order = {
+          id: backendOrder.id,
+          date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+          items: [...cartItems],
+          subtotal,
+          discount: appliedDiscount,
+          shipping: shippingFee,
+          total: grandTotal,
+          recipientName,
+          shippingAddress: `${streetAddress}, ${city}, ${postalCode}`,
+          deliveryDate,
+          cardLast4: cardNumber.slice(-4) || '8892',
+          status: 'Preparing Blooms',
+          trackingNumber: 'TRK-' + Math.floor(10000000 + Math.random() * 90000000)
+        };
+
+        setCompletedOrder(newOrder);
+        onOrderComplete(newOrder);
+        setStep('success');
+      } catch (error) {
+        console.error("Failed to create order:", error);
+        alert("Please login to place an order!");
+        setStep('payment');
+      }
     }, 3600);
-
-    setTimeout(() => {
-      const newOrder: Order = {
-        id: 'FC-' + Math.floor(100000 + Math.random() * 900000),
-        date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-        items: [...cartItems],
-        subtotal,
-        discount: appliedDiscount,
-        shipping: shippingFee,
-        total: grandTotal,
-        recipientName,
-        shippingAddress: `${streetAddress}, ${city}, ${postalCode}`,
-        deliveryDate,
-        cardLast4: cardNumber.slice(-4) || '8892',
-        status: 'Preparing Blooms',
-        trackingNumber: 'TRK-' + Math.floor(10000000 + Math.random() * 90000000)
-      };
-
-      setCompletedOrder(newOrder);
-      onOrderComplete(newOrder);
-      setStep('success');
-    }, 4500);
   };
 
   return (
@@ -275,7 +291,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
               <div className="bg-gradient-to-tr from-[#3D1E28] via-[#8C1C40] to-[#E05280] text-white p-5 rounded-2xl shadow-lg relative overflow-hidden">
                 <div className="flex justify-between items-start mb-6">
                   <div>
-                    <span className="text-[10px] uppercase tracking-widest text-pink-200 block">FloraCharm Vault</span>
+                    <span className="text-[10px] uppercase tracking-widest text-pink-200 block">FreshFlora Vault</span>
                     <span className="font-serif font-bold text-lg">Debit / Credit Card</span>
                   </div>
                   <CreditCard className="w-8 h-8 text-pink-200 opacity-80" />
@@ -479,12 +495,12 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
               <div className="flex flex-col sm:flex-row gap-3 pt-2">
                 <button
                   onClick={() => {
-                    const textContent = `FloraCharm Order Receipt #${completedOrder.id}\nRecipient: ${completedOrder.recipientName}\nAddress: ${completedOrder.shippingAddress}\nTotal Paid: $${completedOrder.total.toFixed(2)}\nTracking: ${completedOrder.trackingNumber}`;
+                    const textContent = `FreshFlora Order Receipt #${completedOrder.id}\nRecipient: ${completedOrder.recipientName}\nAddress: ${completedOrder.shippingAddress}\nTotal Paid: $${completedOrder.total.toFixed(2)}\nTracking: ${completedOrder.trackingNumber}`;
                     const blob = new Blob([textContent], { type: 'text/plain' });
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement('a');
                     a.href = url;
-                    a.download = `FloraCharm_Receipt_${completedOrder.id}.txt`;
+                    a.download = `FreshFlora_Receipt_${completedOrder.id}.txt`;
                     a.click();
                   }}
                   className="w-full py-3 rounded-xl bg-[#FFF0F5] hover:bg-[#FCE8EF] text-[#8C1C40] border border-[#F8D7E3] font-bold text-xs transition-colors flex items-center justify-center gap-2"

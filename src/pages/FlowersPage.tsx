@@ -6,6 +6,7 @@ import { Flower2, Sparkles } from 'lucide-react';
 
 interface FlowersPageProps {
   flowers: Flower[];
+  isLoading?: boolean;
   onAddToCart: (flower: Flower) => void;
   onBuyNow: (flower: Flower) => void;
   onQuickView: (flower: Flower) => void;
@@ -17,6 +18,7 @@ interface FlowersPageProps {
 
 export const FlowersPage: React.FC<FlowersPageProps> = ({
   flowers,
+  isLoading = false,
   onAddToCart,
   onBuyNow,
   onQuickView,
@@ -27,23 +29,6 @@ export const FlowersPage: React.FC<FlowersPageProps> = ({
 }) => {
   return (
     <div className="pt-24 pb-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      
-      {/* Banner Header */}
-      <div className="text-center max-w-3xl mx-auto mb-10">
-        <div className="inline-flex items-center gap-2 bg-[#FCE8EF] px-4 py-1.5 rounded-full border border-[#F8D7E3] mb-3">
-          <Flower2 className="w-4 h-4 text-[#C83863]" />
-          <span className="text-xs font-bold text-[#8C1C40] tracking-wide">
-            Complete FloraCharm Boutique Shop
-          </span>
-        </div>
-
-        <h1 className="font-serif text-3xl sm:text-5xl font-bold text-[#3D1E28] mb-3">
-          All Fresh Flower Bouquets & Arrangements
-        </h1>
-        <p className="text-xs sm:text-sm text-[#735A63]">
-          Browse our entire garden collection filtered by flower type, price, and availability. All stems are hand-picked at dawn and arranged with artisan care.
-        </p>
-      </div>
 
       {/* Filter Component */}
       <FilterSection
@@ -54,7 +39,12 @@ export const FlowersPage: React.FC<FlowersPageProps> = ({
       />
 
       {/* Grid of Results */}
-      {filteredFlowers.length === 0 ? (
+      {isLoading ? (
+        <div className="py-24 text-center">
+          <div className="w-10 h-10 mx-auto border-4 border-[#FCE8EF] border-t-[#C83863] rounded-full animate-spin"></div>
+          <p className="mt-4 text-sm font-bold text-[#3D1E28]">Fetching Collection...</p>
+        </div>
+      ) : filteredFlowers.length === 0 ? (
         <div className="text-center py-16 bg-white rounded-3xl border border-[#F8D7E3] p-8 shadow-sm">
           <div className="text-4xl mb-3">💐</div>
           <h3 className="font-serif text-xl font-bold text-[#3D1E28] mb-1">

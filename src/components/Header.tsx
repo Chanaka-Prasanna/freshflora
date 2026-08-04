@@ -3,8 +3,8 @@ import { ShoppingBag, User, Search, Menu, X, Heart, Flower2, Sparkles, Check } f
 import { User as UserType } from '../types';
 
 interface HeaderProps {
-  currentPage: 'home' | 'flowers' | 'privacy';
-  setCurrentPage: (page: 'home' | 'flowers' | 'privacy') => void;
+  currentPage: 'home' | 'flowers' | 'privacy' | 'orders';
+  setCurrentPage: (page: 'home' | 'flowers' | 'privacy' | 'orders') => void;
   cartCount: number;
   onOpenCart: () => void;
   onOpenAuth: () => void;
@@ -80,7 +80,7 @@ export const Header: React.FC<HeaderProps> = ({
           <span className="text-2xl text-[#E86F80]">✿</span>
           <div>
             <span className="font-serif italic text-xl font-bold text-[#E86F80] block leading-none">
-              FloraCharm
+              FreshFlora
             </span>
             <span className="text-[9px] uppercase tracking-widest text-[#4A3B3B]/60 font-semibold block mt-0.5">
               Petals & Prose Boutique
@@ -115,14 +115,23 @@ export const Header: React.FC<HeaderProps> = ({
             Flowers
           </button>
 
-          {/* Quick Home Section Anchors */}
-          <button
-            onClick={() => navigateToSection('hot-products')}
-            className="text-[#4A3B3B] hover:text-[#E86F80] transition-colors py-1"
-          >
-            Hot Products
-          </button>
+          {user && (
+            <button
+              onClick={() => {
+                setCurrentPage('orders');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className={`transition-colors relative py-1 ${
+                currentPage === 'orders'
+                  ? 'text-[#E86F80] font-bold border-b-2 border-[#E86F80]'
+                  : 'text-[#4A3B3B] hover:text-[#E86F80]'
+              }`}
+            >
+              Orders
+            </button>
+          )}
 
+          {/* Quick Home Section Anchors */}
           <button
             onClick={() => navigateToSection('reviews')}
             className="text-[#4A3B3B] hover:text-[#E86F80] transition-colors py-1"
@@ -252,12 +261,19 @@ export const Header: React.FC<HeaderProps> = ({
             Flowers Catalog
           </button>
 
-          <button
-            onClick={() => navigateToSection('hot-products')}
-            className="block w-full text-left px-3 py-2 rounded-md uppercase tracking-wider text-xs font-medium text-[#4A3B3B] hover:bg-[#FDE2E4]/50"
-          >
-            Hot Products
-          </button>
+          {user && (
+            <button
+              onClick={() => {
+                setCurrentPage('orders');
+                setMobileMenuOpen(false);
+              }}
+              className={`block w-full text-left px-3 py-2 rounded-md uppercase tracking-wider text-xs font-medium ${
+                currentPage === 'orders' ? 'bg-[#FDE2E4] text-[#E86F80] font-bold' : 'text-[#4A3B3B]'
+              }`}
+            >
+              Order History
+            </button>
+          )}
 
           <button
             onClick={() => navigateToSection('reviews')}
