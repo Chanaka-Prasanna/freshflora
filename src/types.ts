@@ -9,7 +9,7 @@ export type FlowerCategory =
   | 'Sunflowers' 
   | 'Mixed Bouquets';
 
-export type AvailabilityStatus = 'In Stock' | 'Pre-Order' | 'Limited Season';
+export type AvailabilityStatus = 'In Stock' | 'Pre-Order' | 'Limited Season' | 'Out of Stock';
 
 export interface Flower {
   id: string;
@@ -22,6 +22,7 @@ export interface Flower {
   rating: number;
   reviewCount: number;
   ordersCount: number;
+  stock: number;
   isHot?: boolean;
   isFeatured?: boolean;
   imageUrl: string;

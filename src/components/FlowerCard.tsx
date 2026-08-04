@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShoppingBag, Star, Flame, Eye, CreditCard, Heart, Check, Sparkles } from 'lucide-react';
+import { ShoppingBag, Star, Flame, Eye, CreditCard, Heart, Check, Sparkles, XCircle } from 'lucide-react';
 import { Flower } from '../types';
 
 interface FlowerCardProps {
@@ -17,9 +17,15 @@ export const FlowerCard: React.FC<FlowerCardProps> = ({
 }) => {
   const [isLiked, setIsLiked] = useState(false);
   const [addedToast, setAddedToast] = useState(false);
+  const [showOutofStock, setShowOutofStock] = useState(false);
 
   const handleAddToCartClick = (e: React.MouseEvent) => {
     e.stopPropagation();
+    if (flower.stock === 0) {
+      setShowOutofStock(true);
+      setTimeout(() => setShowOutofStock(false), 3000);
+      return;
+    }
     onAddToCart(flower);
     setAddedToast(true);
     setTimeout(() => setAddedToast(false), 1800);
@@ -27,6 +33,11 @@ export const FlowerCard: React.FC<FlowerCardProps> = ({
 
   const handleBuyNowClick = (e: React.MouseEvent) => {
     e.stopPropagation();
+    if (flower.stock === 0) {
+      setShowOutofStock(true);
+      setTimeout(() => setShowOutofStock(false), 3000);
+      return;
+    }
     onBuyNow(flower);
   };
 
@@ -66,6 +77,19 @@ export const FlowerCard: React.FC<FlowerCardProps> = ({
         <div className="absolute top-3 left-1/2 -translate-x-1/2 z-20 bg-[#4A3B3B] text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1.5 animate-fadeIn">
           <Check className="w-3.5 h-3.5 text-[#86EFAC]" />
           Added to cart!
+        </div>
+      )}
+
+      {/* Out of Stock Alert Modal overlay */}
+      {showOutofStock && (
+        <div className="absolute inset-0 z-30 bg-white/90 backdrop-blur-sm rounded-xl flex items-center justify-center animate-fadeIn p-4 text-center">
+          <div className="flex flex-col items-center">
+            <XCircle className="w-10 h-10 text-[#C83863] mb-2" />
+            <h4 className="font-serif font-bold text-[#4A3B3B] text-sm">Out of Stock</h4>
+            <p className="text-[10px] text-[#4A3B3B]/80 mt-1">
+              We're sorry, this beautiful arrangement is currently sold out.
+            </p>
+          </div>
         </div>
       )}
 
@@ -167,7 +191,7 @@ export const FlowerCard: React.FC<FlowerCardProps> = ({
               )}
             </div>
             <span className="text-[10px] text-[#4A3B3B]/70 font-medium bg-[#FFF0F1] px-2 py-0.5 rounded">
-              {flower.stemCount} stems
+              {flower.stock > 0 ? `${flower.stock} in stock` : 'Sold out'}
             </span>
           </div>
 
@@ -175,18 +199,28 @@ export const FlowerCard: React.FC<FlowerCardProps> = ({
           <div className="grid grid-cols-2 gap-2 mt-1">
             <button
               onClick={handleAddToCartClick}
-              className="w-full py-1.5 px-2 rounded bg-[#FDE2E4] hover:bg-[#E86F80] hover:text-white text-[#E86F80] font-bold text-[10px] uppercase tracking-wider transition-colors flex items-center justify-center gap-1 active:scale-95"
+              disabled={flower.stock === 0}
+              className={`w-full py-1.5 px-2 rounded font-bold text-[10px] uppercase tracking-wider transition-colors flex items-center justify-center gap-1 active:scale-95 ${
+                flower.stock === 0 
+                  ? 'bg-gray-200 text-gray-500 cursor-not-allowed opacity-70' 
+                  : 'bg-[#FDE2E4] hover:bg-[#E86F80] hover:text-white text-[#E86F80]'
+              }`}
             >
               <ShoppingBag className="w-3 h-3" />
-              ADD TO CART
+              {flower.stock === 0 ? 'SOLD OUT' : 'ADD TO CART'}
             </button>
 
             <button
               onClick={handleBuyNowClick}
-              className="w-full py-1.5 px-2 rounded bg-[#E86F80] hover:bg-[#d65f70] text-white font-bold text-[10px] uppercase tracking-wider shadow-sm transition-colors flex items-center justify-center gap-1 active:scale-95"
+              disabled={flower.stock === 0}
+              className={`w-full py-1.5 px-2 rounded font-bold text-[10px] uppercase tracking-wider shadow-sm transition-colors flex items-center justify-center gap-1 active:scale-95 ${
+                flower.stock === 0 
+                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed opacity-70'
+                  : 'bg-[#E86F80] hover:bg-[#d65f70] text-white'
+              }`}
             >
               <CreditCard className="w-3 h-3" />
-              BUY NOW
+              {flower.stock === 0 ? 'SOLD OUT' : 'BUY NOW'}
             </button>
           </div>
 

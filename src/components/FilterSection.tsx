@@ -25,7 +25,8 @@ const AVAILABILITY_OPTIONS: Array<'All' | AvailabilityStatus> = [
   'All',
   'In Stock',
   'Pre-Order',
-  'Limited Season'
+  'Limited Season',
+  'Out of Stock'
 ];
 
 export const FilterSection: React.FC<FilterSectionProps> = ({

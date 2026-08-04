@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Star, Truck, ShieldCheck, Heart, Sparkles, Check, ShoppingBag, CreditCard, Gift, Flower2 } from 'lucide-react';
+import { X, Star, Truck, ShieldCheck, Heart, Sparkles, Check, ShoppingBag, CreditCard, Gift, Flower2, XCircle } from 'lucide-react';
 import { Flower } from '../types';
 
 interface FlowerDetailModalProps {
@@ -19,6 +19,7 @@ export const FlowerDetailModal: React.FC<FlowerDetailModalProps> = ({
   const [customGreetingNote, setCustomGreetingNote] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [isAdded, setIsAdded] = useState(false);
+  const [showOutofStock, setShowOutofStock] = useState(false);
 
   if (!flower) return null;
 
@@ -26,6 +27,11 @@ export const FlowerDetailModal: React.FC<FlowerDetailModalProps> = ({
   const totalPrice = (flower.price + (includeVase ? vasePrice : 0)) * quantity;
 
   const handleAdd = () => {
+    if (flower.stock === 0) {
+      setShowOutofStock(true);
+      setTimeout(() => setShowOutofStock(false), 3000);
+      return;
+    }
     for (let i = 0; i < quantity; i++) {
       onAddToCart(flower, includeVase, customGreetingNote);
     }
@@ -37,6 +43,11 @@ export const FlowerDetailModal: React.FC<FlowerDetailModalProps> = ({
   };
 
   const handleBuy = () => {
+    if (flower.stock === 0) {
+      setShowOutofStock(true);
+      setTimeout(() => setShowOutofStock(false), 3000);
+      return;
+    }
     onBuyNow(flower, includeVase, customGreetingNote);
     onClose();
   };
@@ -50,10 +61,23 @@ export const FlowerDetailModal: React.FC<FlowerDetailModalProps> = ({
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-white/80 hover:bg-white text-gray-600 hover:text-black flex items-center justify-center shadow-md transition-colors"
+          className="absolute top-4 right-4 z-20 w-9 h-9 rounded-full bg-white/80 hover:bg-white text-gray-600 hover:text-black flex items-center justify-center shadow-md transition-colors"
         >
           <X className="w-5 h-5" />
         </button>
+
+        {/* Out of Stock Overlay */}
+        {showOutofStock && (
+          <div className="absolute inset-0 z-30 bg-white/90 backdrop-blur-sm rounded-3xl flex items-center justify-center animate-fadeIn p-4 text-center">
+            <div className="flex flex-col items-center">
+              <XCircle className="w-16 h-16 text-[#C83863] mb-4" />
+              <h4 className="font-serif font-bold text-[#4A3B3B] text-2xl mb-2">Out of Stock</h4>
+              <p className="text-sm text-[#4A3B3B]/80 max-w-sm">
+                We're sorry, this beautiful arrangement is currently sold out and cannot be ordered at this time.
+              </p>
+            </div>
+          </div>
+        )}
 
         <div className="grid grid-cols-1 md:grid-cols-2">
           {/* Left Column: Image & Badges */}
@@ -80,8 +104,7 @@ export const FlowerDetailModal: React.FC<FlowerDetailModalProps> = ({
               <div className="flex items-center gap-2 text-xs text-[#8C5A6A] mb-1 font-medium">
                 <Flower2 className="w-3.5 h-3.5 text-[#C83863]" />
                 <span>Hand-Arranged Fresh Florals</span>
-                <span>•</span>
-                <span>{flower.stemCount} Premium Stems</span>
+                <span>{flower.stock > 0 ? `${flower.stock} Items in Stock` : 'Out of Stock'}</span>
               </div>
 
               <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#3D1E28] mb-2 leading-tight">
@@ -190,13 +213,22 @@ export const FlowerDetailModal: React.FC<FlowerDetailModalProps> = ({
               <div className="grid grid-cols-2 gap-3 mb-4">
                 <button
                   onClick={handleAdd}
-                  disabled={isAdded}
-                  className="w-full py-2.5 px-4 rounded-full bg-white hover:bg-[#FDE2E4] text-[#E86F80] border border-[#E86F80] font-bold text-xs transition-all flex items-center justify-center gap-2 active:scale-95"
+                  disabled={isAdded || flower.stock === 0}
+                  className={`w-full py-2.5 px-4 rounded-full font-bold text-xs transition-all flex items-center justify-center gap-2 active:scale-95 border ${
+                    flower.stock === 0
+                      ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
+                      : 'bg-white hover:bg-[#FDE2E4] text-[#E86F80] border-[#E86F80]'
+                  }`}
                 >
                   {isAdded ? (
                     <>
                       <Check className="w-4 h-4 text-[#2E7D32]" />
                       Added to Cart!
+                    </>
+                  ) : flower.stock === 0 ? (
+                    <>
+                      <XCircle className="w-4 h-4 text-gray-400" />
+                      Sold Out
                     </>
                   ) : (
                     <>
@@ -208,10 +240,15 @@ export const FlowerDetailModal: React.FC<FlowerDetailModalProps> = ({
 
                 <button
                   onClick={handleBuy}
-                  className="w-full py-2.5 px-4 rounded-full bg-[#E86F80] hover:bg-[#d65f70] text-white font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2 active:scale-95"
+                  disabled={flower.stock === 0}
+                  className={`w-full py-2.5 px-4 rounded-full font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2 active:scale-95 ${
+                    flower.stock === 0
+                      ? 'bg-gray-300 text-gray-500 cursor-not-allowed opacity-70 shadow-none'
+                      : 'bg-[#E86F80] hover:bg-[#d65f70] text-white'
+                  }`}
                 >
                   <CreditCard className="w-4 h-4" />
-                  Instant Checkout
+                  {flower.stock === 0 ? 'Sold Out' : 'Instant Checkout'}
                 </button>
               </div>
 

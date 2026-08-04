@@ -40,6 +40,7 @@ export const api = {
     if (params.searchQuery) query.append('search', params.searchQuery);
     if (params.category && params.category !== 'All') query.append('category', params.category);
     if (params.maxPrice) query.append('max_price', params.maxPrice);
+    if (params.availability && params.availability !== 'All') query.append('availability', params.availability);
     
     // Sort logic
     if (params.sortBy === 'price-low') {
@@ -63,10 +64,11 @@ export const api = {
         description: item.description,
         price: item.price,
         category: item.category as any,
-        availability: 'In Stock', // Default mapping
+        availability: item.stock === 0 ? 'Out of Stock' : (item.availability || 'In Stock'),
         rating: 4.5,
         reviewCount: 0,
-        ordersCount: 0,
+        ordersCount: item.orders || 0,
+        stock: item.stock || 0,
         imageUrl: item.image_url,
         flowerColor: 'Mixed', // Default mapping
         stemCount: 12,
@@ -86,10 +88,11 @@ export const api = {
       description: item.description,
       price: item.price,
       category: item.category as any,
-      availability: 'In Stock',
+      availability: item.stock === 0 ? 'Out of Stock' : (item.availability || 'In Stock'),
       rating: 4.5,
       reviewCount: 0,
-      ordersCount: 0,
+      ordersCount: item.orders || 0,
+      stock: item.stock || 0,
       imageUrl: item.image_url,
       flowerColor: 'Mixed',
       stemCount: 12,
