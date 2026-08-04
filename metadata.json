@@ -1,0 +1,6 @@
+{
+  "name": "FloraCharm - Fresh Flower Boutique",
+  "description": "Charming fresh flower delivery boutique with handpicked bouquets, custom arrangements, interactive filters, and instant mock checkout.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

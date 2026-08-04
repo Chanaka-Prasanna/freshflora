@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-serif: 'Playfair Display', Georgia, serif;
+    --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  }
+  
+  body {
+    font-family: var(--font-sans);
+    color: #4A3B3B;
+    background-color: #FFF9F9;
+  }
+
+  h1, h2, h3, .font-serif {
+    font-family: var(--font-serif);
+  }
+}
+
+/* Custom Utilities for Geometric Balance Design Theme */
+.bg-rose-blush {
+  background-color: #FFF0F1;
+}
+
+.bg-rose-pink {
+  background-color: #FDE2E4;
+}
+
+.bg-rose-cream {
+  background-color: #FFF9F9;
+}
+
+.text-rose-deep {
+  color: #E86F80;
+}
+
+.border-rose-soft {
+  border-color: #FDE2E4;
+}
+
+.shadow-rose-soft {
+  box-shadow: 0 10px 30px -10px rgba(232, 111, 128, 0.15);
+}
+
+.shadow-rose-hover {
+  box-shadow: 0 20px 40px -12px rgba(232, 111, 128, 0.25);
+}
+
+/* Smooth Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #FFF0F1;
+}
+::-webkit-scrollbar-thumb {
+  background: #FDE2E4;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #E86F80;
+}
+
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(1deg); }
+}
+
+.animate-float {
+  animation: floatSlow 6s ease-in-out infinite;
+}
+
+
