@@ -45,7 +45,7 @@ export const ContactSection: React.FC = () => {
                 </div>
                 <div>
                   <h4 className="font-serif font-bold text-sm text-[#3D1E28]">Boutique Address</h4>
-                  <p className="text-xs text-[#735A63]">428 Magnolia Blossom Avenue, Floral District, San Francisco, CA 94108</p>
+                  <p className="text-xs text-[#735A63]">428 Galle Road, Kollupitiya, Colombo 03, Sri Lanka</p>
                 </div>
               </div>
 
@@ -55,7 +55,7 @@ export const ContactSection: React.FC = () => {
                 </div>
                 <div>
                   <h4 className="font-serif font-bold text-sm text-[#3D1E28]">Telephone & Hotline</h4>
-                  <p className="text-xs text-[#735A63]">+1 (800) 555-BLOOM • (415) 882-3921</p>
+                  <p className="text-xs text-[#735A63]">+94 77 123 4567 • 011 234 5678</p>
                 </div>
               </div>
 
@@ -152,7 +152,7 @@ export const ContactSection: React.FC = () => {
                   <input
                     type="text"
                     required
-                    placeholder="e.g. Amelia Vance"
+                    placeholder="e.g. Nimal Perera"
                     value={senderName}
                     onChange={(e) => setSenderName(e.target.value)}
                     className="w-full text-xs p-3 rounded-xl border border-[#F8D7E3] bg-[#FFF0F5] text-[#2D232E] focus:outline-none focus:ring-2 focus:ring-[#C83863]/30"
@@ -166,7 +166,7 @@ export const ContactSection: React.FC = () => {
                   <input
                     type="email"
                     required
-                    placeholder="amelia@example.com"
+                    placeholder="nimal@example.com"
                     value={senderEmail}
                     onChange={(e) => setSenderEmail(e.target.value)}
                     className="w-full text-xs p-3 rounded-xl border border-[#F8D7E3] bg-[#FFF0F5] text-[#2D232E] focus:outline-none focus:ring-2 focus:ring-[#C83863]/30"

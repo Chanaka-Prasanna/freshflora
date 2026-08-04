@@ -71,7 +71,7 @@ export const PrivacyPage: React.FC = () => {
             5. Contact Our Privacy Concierge
           </h2>
           <p>
-            If you have questions regarding your data or wish to request data removal from our customer database, please email our privacy team at <a href="mailto:privacy@freshflora.com" className="text-[#C83863] font-bold underline">privacy@freshflora.com</a> or write to FreshFlora Florist, 428 Magnolia Blossom Ave, San Francisco, CA.
+            If you have questions regarding your data or wish to request data removal from our customer database, please email our privacy team at <a href="mailto:privacy@freshflora.com" className="text-[#C83863] font-bold underline">privacy@freshflora.com</a> or write to FreshFlora Florist, 428 Galle Road, Colombo 03, Sri Lanka.
           </p>
         </section>
 

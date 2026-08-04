@@ -3,7 +3,7 @@ import { Review } from '../types';
 export const REVIEWS: Review[] = [
   {
     id: 'r1',
-    authorName: 'Eleanor Vance',
+    authorName: 'Sanduni Fernando',
     avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
     rating: 5,
     date: 'August 1, 2026',
@@ -14,7 +14,7 @@ export const REVIEWS: Review[] = [
   },
   {
     id: 'r2',
-    authorName: 'Claire D’Souza',
+    authorName: 'Nimali Silva',
     avatarUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=150&q=80',
     rating: 5,
     date: 'July 28, 2026',
@@ -25,7 +25,7 @@ export const REVIEWS: Review[] = [
   },
   {
     id: 'r3',
-    authorName: 'Julian Mercer',
+    authorName: 'Malith R.',
     avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80',
     rating: 5,
     date: 'July 22, 2026',
@@ -36,7 +36,7 @@ export const REVIEWS: Review[] = [
   },
   {
     id: 'r4',
-    authorName: 'Sophia Thorne',
+    authorName: 'Eranga M.',
     avatarUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&q=80',
     rating: 4,
     date: 'July 15, 2026',

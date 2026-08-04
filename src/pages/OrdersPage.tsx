@@ -161,7 +161,7 @@ export const OrdersPage: React.FC<OrdersPageProps> = ({ onNavigateToCatalog }) =
                         Total
                       </span>
                       <span className="font-serif text-xl font-bold text-[#E86F80]">
-                        ${order.total_amount.toFixed(2)}
+                        Rs. {order.total_amount.toFixed(2)}
                       </span>
                     </div>
 

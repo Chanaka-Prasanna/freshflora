@@ -114,16 +114,16 @@ export const FlowerDetailModal: React.FC<FlowerDetailModalProps> = ({
               {/* Price Calculation */}
               <div className="flex items-baseline gap-3 mb-6">
                 <span className="font-serif text-3xl font-bold text-[#8C1C40]">
-                  ${totalPrice.toFixed(2)}
+                  Rs. {totalPrice.toFixed(2)}
                 </span>
                 {flower.originalPrice && (
                   <span className="text-sm text-gray-400 line-through">
-                    ${(flower.originalPrice * quantity).toFixed(2)}
+                    Rs. {(flower.originalPrice * quantity).toFixed(2)}
                   </span>
                 )}
                 {includeVase && (
                   <span className="text-xs text-[#C83863] bg-[#FCE8EF] font-semibold px-2.5 py-1 rounded-full">
-                    +$14.00 Crystal Vase
+                    +Rs. 1400.00 Crystal Vase
                   </span>
                 )}
               </div>

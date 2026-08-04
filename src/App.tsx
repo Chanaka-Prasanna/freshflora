@@ -104,7 +104,7 @@ export default function App() {
   // Filter State
   const [filters, setFilters] = useState<FilterState>({
     category: 'All',
-    maxPrice: 100,
+    maxPrice: 10000,
     availability: 'All',
     sortBy: 'popular',
     searchQuery: '',
@@ -113,7 +113,7 @@ export default function App() {
   const handleResetFilters = () => {
     setFilters({
       category: 'All',
-      maxPrice: 100,
+      maxPrice: 10000,
       availability: 'All',
       sortBy: 'popular',
       searchQuery: '',

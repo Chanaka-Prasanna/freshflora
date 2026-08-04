@@ -99,22 +99,22 @@ export const FilterSection: React.FC<FilterSectionProps> = ({
                 Max Price Filter
               </label>
               <span className="font-serif font-bold text-sm text-[#8C1C40]">
-                Up to ${filters.maxPrice}
+                Up to Rs. {filters.maxPrice}
               </span>
             </div>
             <input
               type="range"
-              min={30}
-              max={100}
-              step={5}
+              min={500}
+              max={10000}
+              step={100}
               value={filters.maxPrice}
               onChange={(e) => onFilterChange({ ...filters, maxPrice: Number(e.target.value) })}
               className="w-full accent-[#C83863] cursor-pointer"
             />
             <div className="flex justify-between text-[10px] text-gray-500 mt-1">
-              <span>$30</span>
-              <span>$65</span>
-              <span>$100</span>
+              <span>Rs. 500</span>
+              <span>Rs. 5000</span>
+              <span>Rs. 10000</span>
             </div>
           </div>
 

@@ -88,7 +88,7 @@ export const FlowerCard: React.FC<FlowerCardProps> = ({
           )}
           {flower.originalPrice && (
             <span className="bg-[#4A3B3B] text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
-              Save ${ (flower.originalPrice - flower.price).toFixed(0) }
+              Save Rs. { (flower.originalPrice - flower.price).toFixed(0) }
             </span>
           )}
         </div>
@@ -158,11 +158,11 @@ export const FlowerCard: React.FC<FlowerCardProps> = ({
           <div className="flex items-baseline justify-between">
             <div className="flex items-baseline gap-2">
               <span className="text-base font-bold font-serif text-[#E86F80]">
-                ${flower.price.toFixed(2)}
+                Rs. {flower.price.toFixed(2)}
               </span>
               {flower.originalPrice && (
                 <span className="text-xs text-gray-400 line-through">
-                  ${flower.originalPrice.toFixed(2)}
+                  Rs. {flower.originalPrice.toFixed(2)}
                 </span>
               )}
             </div>

@@ -64,7 +64,7 @@ export const Header: React.FC<HeaderProps> = ({
       {/* Top Banner Notice */}
       <div className="hidden md:flex justify-center items-center gap-2 text-xs font-medium text-[#4A3B3B] bg-[#FDE2E4] py-1 px-4 mb-2 -mt-3.5">
         <Sparkles className="w-3.5 h-3.5 text-[#E86F80]" />
-        <span>Complimentary Next-Day Delivery on orders over $60 — Use code <strong className="font-bold underline tracking-wide text-[#E86F80]">BLOOM10</strong> for 10% OFF</span>
+        <span>Complimentary Next-Day Delivery on orders over Rs. 6000 — Use code <strong className="font-bold underline tracking-wide text-[#E86F80]">BLOOM10</strong> for 10% OFF</span>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">

@@ -122,7 +122,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           </div>
 
           <div className="flex space-x-2 items-center">
-            <span className="bg-white px-3 py-1 rounded-full text-[10px] border border-[#FAD2D4] text-[#4A3B3B]">Price: $15 - $150</span>
+            <span className="bg-white px-3 py-1 rounded-full text-[10px] border border-[#FAD2D4] text-[#4A3B3B]">Price: Rs. 1500 - Rs. 15000</span>
             <span className="bg-white px-3 py-1 rounded-full text-[10px] border border-[#FAD2D4] text-[#4A3B3B]">Status: In Stock</span>
             <button
               onClick={onNavigateToCatalog}

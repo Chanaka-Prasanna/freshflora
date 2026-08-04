@@ -20,7 +20,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   const [step, setStep] = useState<'shipping' | 'payment' | 'processing' | 'success'>('shipping');
 
   // Form states
-  const [recipientName, setRecipientName] = useState('Sarah Jenkins');
+  const [recipientName, setRecipientName] = useState('Sanduni Fernando');
   const [streetAddress, setStreetAddress] = useState('742 Evergreen Terrace');
   const [city, setCity] = useState('Springfield');
   const [postalCode, setPostalCode] = useState('97477');
@@ -28,7 +28,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   const [deliveryInstructions, setDeliveryInstructions] = useState('Please leave near the front door in the shade.');
 
   // Card states (Dummy Mock)
-  const [cardName, setCardName] = useState('Sarah Jenkins');
+  const [cardName, setCardName] = useState('Sanduni Fernando');
   const [cardNumber, setCardNumber] = useState('4532 •••• •••• 8892');
   const [cardExpiry, setCardExpiry] = useState('08/28');
   const [cardCvc, setCardCvc] = useState('882');
@@ -51,7 +51,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let val = e.target.value.replace(/\D/g, '');
     val = val.substring(0, 16);
-    const formatted = val.replace(/(\d{4})/g, '$1 ').trim();
+    const formatted = val.replace(/(\d{4})/g, 'Rs. 100 ').trim();
     setCardNumber(formatted || '4532 ');
   };
 
@@ -78,7 +78,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
     }, 1200);
 
     setTimeout(() => {
-      setProcessingStatus('Authorizing $ ' + grandTotal.toFixed(2) + ' payment with issuing bank...');
+      setProcessingStatus('Authorizing Rs. ' + grandTotal.toFixed(2) + ' payment with issuing bank...');
     }, 2400);
 
     setTimeout(async () => {
@@ -259,7 +259,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 <div>
                   <span className="text-xs text-[#8C5A6A] block">Total Amount Due</span>
                   <span className="font-serif text-2xl font-bold text-[#8C1C40]">
-                    ${grandTotal.toFixed(2)}
+                    Rs. {grandTotal.toFixed(2)}
                   </span>
                 </div>
 
@@ -302,7 +302,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 <div className="flex justify-between text-xs font-mono">
                   <div>
                     <span className="text-[9px] text-pink-200 block uppercase">Cardholder</span>
-                    <span>{cardName || 'SARAH JENKINS'}</span>
+                    <span>{cardName || 'NIMAL PERERA'}</span>
                   </div>
                   <div>
                     <span className="text-[9px] text-pink-200 block uppercase">Expires</span>
@@ -390,7 +390,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                   className="py-3.5 px-6 rounded-xl bg-[#C83863] hover:bg-[#B02852] text-white font-bold text-xs shadow-md transition-all flex items-center gap-2"
                 >
                   <Lock className="w-3.5 h-3.5" />
-                  Pay ${grandTotal.toFixed(2)} (Simulate)
+                  Pay Rs. {grandTotal.toFixed(2)} (Simulate)
                 </button>
               </div>
             </form>
@@ -463,7 +463,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                         {item.quantity}x {item.flower.title} {item.selectedVase && '(+ Glass Vase)'}
                       </span>
                       <span className="font-semibold text-[#8C1C40]">
-                        ${((item.flower.price + (item.selectedVase ? 14 : 0)) * item.quantity).toFixed(2)}
+                        Rs. {((item.flower.price + (item.selectedVase ? 1400 : 0)) * item.quantity).toFixed(2)}
                       </span>
                     </div>
                   ))}
@@ -495,7 +495,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
               <div className="flex flex-col sm:flex-row gap-3 pt-2">
                 <button
                   onClick={() => {
-                    const textContent = `FreshFlora Order Receipt #${completedOrder.id}\nRecipient: ${completedOrder.recipientName}\nAddress: ${completedOrder.shippingAddress}\nTotal Paid: $${completedOrder.total.toFixed(2)}\nTracking: ${completedOrder.trackingNumber}`;
+                    const textContent = `FreshFlora Order Receipt #${completedOrder.id}\nRecipient: ${completedOrder.recipientName}\nAddress: ${completedOrder.shippingAddress}\nTotal Paid: Rs. ${completedOrder.total.toFixed(2)}\nTracking: ${completedOrder.trackingNumber}`;
                     const blob = new Blob([textContent], { type: 'text/plain' });
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement('a');

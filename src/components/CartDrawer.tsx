@@ -97,7 +97,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 {amountForFreeShipping === 0 ? (
                   <span className="text-[#2E7D32] font-bold">🎉 Free Next-Day Shipping Unlocked!</span>
                 ) : (
-                  <span>Add ${amountForFreeShipping.toFixed(2)} for FREE Next-Day Delivery</span>
+                  <span>Add Rs. {amountForFreeShipping.toFixed(2)} for FREE Next-Day Delivery</span>
                 )}
               </span>
             </div>
@@ -167,7 +167,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
                         {item.selectedVase && (
                           <span className="inline-block text-[10px] font-semibold text-[#C83863] bg-[#FCE8EF] px-2 py-0.5 rounded-full mb-1">
-                            + Artisanal Glass Vase ($14.00)
+                            + Artisanal Glass Vase (Rs. 1400.00)
                           </span>
                         )}
 
@@ -197,7 +197,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                         </div>
 
                         <span className="font-serif font-bold text-sm text-[#8C1C40]">
-                          ${(itemUnitPrice * item.quantity).toFixed(2)}
+                          Rs. {(itemUnitPrice * item.quantity).toFixed(2)}
                         </span>
                       </div>
                     </div>
@@ -244,13 +244,13 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               <div className="space-y-1.5 text-xs text-[#5C4550] pt-2 border-t border-[#FCE8EF]">
                 <div className="flex justify-between">
                   <span>Subtotal</span>
-                  <span className="font-semibold text-[#2D232E]">${subtotal.toFixed(2)}</span>
+                  <span className="font-semibold text-[#2D232E]">Rs. {subtotal.toFixed(2)}</span>
                 </div>
 
                 {discountAmount > 0 && (
                   <div className="flex justify-between text-[#2E7D32] font-semibold">
                     <span>Discount ({discountPercent}%)</span>
-                    <span>-${discountAmount.toFixed(2)}</span>
+                    <span>-Rs. {discountAmount.toFixed(2)}</span>
                   </div>
                 )}
 
@@ -261,7 +261,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
                 <div className="flex justify-between font-serif text-base font-bold text-[#3D1E28] pt-2 border-t border-[#F8D7E3]">
                   <span>Total Order</span>
-                  <span className="text-[#8C1C40]">${grandTotal.toFixed(2)}</span>
+                  <span className="text-[#8C1C40]">Rs. {grandTotal.toFixed(2)}</span>
                 </div>
               </div>
 

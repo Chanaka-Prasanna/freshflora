@@ -211,7 +211,7 @@ export const ReviewSection: React.FC<ReviewSectionProps> = ({ reviews, onAddRevi
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Clara Oswald"
+                  placeholder="e.g. Sanduni Fernando"
                   value={authorName}
                   onChange={(e) => setAuthorName(e.target.value)}
                   className="w-full text-xs p-2.5 rounded-xl border border-[#F8D7E3] bg-white text-[#2D232E]"
