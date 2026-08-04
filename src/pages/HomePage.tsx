@@ -36,35 +36,8 @@ export const HomePage: React.FC<HomePageProps> = ({
   filteredFlowers,
   onNavigateToCatalog,
   onAddReview,
-  onLoadMore,
-  hasMore,
-  isFetchingMore,
 }) => {
   const hotProducts = flowers.filter((f) => f.isHot);
-
-  // Intersection Observer for infinite scrolling
-  const observerTarget = React.useRef<HTMLDivElement>(null);
-
-  React.useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasMore && !isFetchingMore && onLoadMore) {
-          onLoadMore();
-        }
-      },
-      { threshold: 1.0 }
-    );
-
-    if (observerTarget.current) {
-      observer.observe(observerTarget.current);
-    }
-
-    return () => {
-      if (observerTarget.current) {
-        observer.unobserve(observerTarget.current);
-      }
-    };
-  }, [observerTarget.current, hasMore, isFetchingMore, onLoadMore]);
 
   return (
     <div className="space-y-12">
@@ -242,17 +215,30 @@ export const HomePage: React.FC<HomePageProps> = ({
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {filteredFlowers.map((flower) => (
-              <FlowerCard
-                key={flower.id}
-                flower={flower}
-                onAddToCart={onAddToCart}
-                onBuyNow={onBuyNow}
-                onQuickView={onQuickView}
-              />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {filteredFlowers.slice(0, 20).map((flower) => (
+                <FlowerCard
+                  key={flower.id}
+                  flower={flower}
+                  onAddToCart={onAddToCart}
+                  onBuyNow={onBuyNow}
+                  onQuickView={onQuickView}
+                />
+              ))}
+            </div>
+            
+            {filteredFlowers.length > 20 && (
+              <div className="mt-10 text-center">
+                <button
+                  onClick={onNavigateToCatalog}
+                  className="px-8 py-3 rounded-full bg-white text-[#C83863] border border-[#C83863] hover:bg-[#FCE8EF] font-bold text-sm shadow-sm transition-colors flex items-center justify-center gap-2 mx-auto"
+                >
+                  See More Flowers →
+                </button>
+              </div>
+            )}
+          </>
         )}
       </section>
 

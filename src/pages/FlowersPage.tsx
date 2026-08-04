@@ -43,19 +43,20 @@ export const FlowersPage: React.FC<FlowersPageProps> = ({
           onLoadMore();
         }
       },
-      { threshold: 1.0 }
+      { threshold: 0.1 }
     );
 
-    if (observerTarget.current) {
-      observer.observe(observerTarget.current);
+    const currentTarget = observerTarget.current;
+    if (currentTarget) {
+      observer.observe(currentTarget);
     }
 
     return () => {
-      if (observerTarget.current) {
-        observer.unobserve(observerTarget.current);
+      if (currentTarget) {
+        observer.unobserve(currentTarget);
       }
     };
-  }, [observerTarget.current, hasMore, isFetchingMore, onLoadMore]);
+  }, [hasMore, isFetchingMore, onLoadMore]);
 
   return (
     <div className="pt-24 pb-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
