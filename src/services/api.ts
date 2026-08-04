@@ -39,6 +39,7 @@ export const api = {
     if (params.size) query.append('size', params.size);
     if (params.searchQuery) query.append('search', params.searchQuery);
     if (params.category && params.category !== 'All') query.append('category', params.category);
+    if (params.maxPrice) query.append('max_price', params.maxPrice);
     
     // Sort logic
     if (params.sortBy === 'price-low') {

@@ -106,7 +106,7 @@ export const FilterSection: React.FC<FilterSectionProps> = ({
               type="range"
               min={500}
               max={10000}
-              step={100}
+              step={500}
               value={filters.maxPrice}
               onChange={(e) => onFilterChange({ ...filters, maxPrice: Number(e.target.value) })}
               className="w-full accent-[#C83863] cursor-pointer"
