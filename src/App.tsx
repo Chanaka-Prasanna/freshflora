@@ -127,23 +127,55 @@ export default function App() {
 
   useEffect(() => {
     import('./services/api').then(({ api }) => {
-      api.getHotProducts().then(setHotFlowers).catch(console.error);
+      api.getHotProducts({ size: 20 }).then(setHotFlowers).catch(console.error);
     });
   }, []);
 
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [isFetchingMore, setIsFetchingMore] = useState(false);
+
+  // Reset pagination on filter change
+  useEffect(() => {
+    setPage(1);
+    setHasMore(true);
+  }, [filters]);
+
   useEffect(() => {
     const handler = setTimeout(() => {
-      setIsLoading(true);
-      import('./services/api').then(({ api }) => {
-        api.getProducts(filters)
-          .then(data => setFilteredFlowers(data.items))
-          .catch(console.error)
-          .finally(() => setIsLoading(false));
-      });
-    }, 400); // 400ms debounce
+      if (page === 1) setIsLoading(true);
+      else setIsFetchingMore(true);
 
+      import('./services/api').then(({ api }) => {
+        api.getProducts({ ...filters, page, size: 12 })
+          .then(data => {
+            if (page === 1) {
+              setFilteredFlowers(data.items);
+            } else {
+              setFilteredFlowers(prev => {
+                // Prevent duplicates by checking ids
+                const existingIds = new Set(prev.map(f => f.id));
+                const newItems = data.items.filter((f: Flower) => !existingIds.has(f.id));
+                return [...prev, ...newItems];
+              });
+            }
+            setHasMore(data.page < data.pages);
+          })
+          .catch(console.error)
+          .finally(() => {
+            setIsLoading(false);
+            setIsFetchingMore(false);
+          });
+      });
+    }, page === 1 ? 300 : 0);
     return () => clearTimeout(handler);
-  }, [filters]);
+  }, [filters, page]);
+
+  const handleLoadMore = () => {
+    if (hasMore && !isFetchingMore && !isLoading) {
+      setPage(p => p + 1);
+    }
+  };
 
   // Cart operations
   const handleAddToCart = (flower: Flower, selectedVase = false, customNote = '') => {
@@ -223,9 +255,12 @@ export default function App() {
             filteredFlowers={filteredFlowers}
             onNavigateToCatalog={() => {
               setCurrentPage('flowers');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
+              window.scrollTo(0, 0);
             }}
             onAddReview={handleAddReview}
+            onLoadMore={handleLoadMore}
+            hasMore={hasMore}
+            isFetchingMore={isFetchingMore}
           />
         )}
 
@@ -240,6 +275,9 @@ export default function App() {
             onFilterChange={setFilters}
             onResetFilters={handleResetFilters}
             filteredFlowers={filteredFlowers}
+            onLoadMore={handleLoadMore}
+            hasMore={hasMore}
+            isFetchingMore={isFetchingMore}
           />
         )}
 

@@ -14,6 +14,9 @@ interface FlowersPageProps {
   onFilterChange: (filters: FilterState) => void;
   onResetFilters: () => void;
   filteredFlowers: Flower[];
+  onLoadMore?: () => void;
+  hasMore?: boolean;
+  isFetchingMore?: boolean;
 }
 
 export const FlowersPage: React.FC<FlowersPageProps> = ({
@@ -26,7 +29,34 @@ export const FlowersPage: React.FC<FlowersPageProps> = ({
   onFilterChange,
   onResetFilters,
   filteredFlowers,
+  onLoadMore,
+  hasMore,
+  isFetchingMore,
 }) => {
+  // Intersection Observer for infinite scrolling
+  const observerTarget = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore && !isFetchingMore && onLoadMore) {
+          onLoadMore();
+        }
+      },
+      { threshold: 1.0 }
+    );
+
+    if (observerTarget.current) {
+      observer.observe(observerTarget.current);
+    }
+
+    return () => {
+      if (observerTarget.current) {
+        observer.unobserve(observerTarget.current);
+      }
+    };
+  }, [observerTarget.current, hasMore, isFetchingMore, onLoadMore]);
+
   return (
     <div className="pt-24 pb-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
@@ -61,17 +91,41 @@ export const FlowersPage: React.FC<FlowersPageProps> = ({
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {filteredFlowers.map((flower) => (
-            <FlowerCard
-              key={flower.id}
-              flower={flower}
-              onAddToCart={onAddToCart}
-              onBuyNow={onBuyNow}
-              onQuickView={onQuickView}
-            />
-          ))}
-        </div>
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {filteredFlowers.map((flower) => (
+              <FlowerCard
+                key={flower.id}
+                flower={flower}
+                onAddToCart={onAddToCart}
+                onBuyNow={onBuyNow}
+                onQuickView={onQuickView}
+              />
+            ))}
+          </div>
+
+          {/* Infinite Scroll Sentinel */}
+          {hasMore && (
+            <div ref={observerTarget} className="flex justify-center mt-12 mb-4">
+              {isFetchingMore ? (
+                <div className="flex flex-col items-center gap-2">
+                  <div className="w-8 h-8 border-4 border-[#FCE8EF] border-t-[#C83863] rounded-full animate-spin"></div>
+                  <span className="text-xs font-bold text-[#3D1E28]">Loading more blooms...</span>
+                </div>
+              ) : (
+                <div className="h-10"></div>
+              )}
+            </div>
+          )}
+          
+          {!hasMore && filteredFlowers.length > 0 && (
+            <div className="text-center mt-12 mb-4">
+              <span className="text-xs font-bold text-[#3D1E28] bg-[#FFF0F5] px-4 py-2 rounded-full border border-[#F8D7E3]">
+                You've reached the end of our garden 🌸
+              </span>
+            </div>
+          )}
+        </>
       )}
 
     </div>

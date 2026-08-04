@@ -78,8 +78,11 @@ export const api = {
     };
   },
 
-  getHotProducts: async () => {
-    const response = await fetch(`${API_BASE_URL}/products/hot`);
+  getHotProducts: async (params: any = {}) => {
+    const query = new URLSearchParams();
+    if (params.size) query.append('size', params.size);
+
+    const response = await fetch(`${API_BASE_URL}/products/hot?${query.toString()}`);
     if (!response.ok) throw new Error('Failed to fetch hot products');
     const data = await response.json();
     return data.items.map((item: any): Flower => ({

@@ -19,6 +19,9 @@ interface HomePageProps {
   filteredFlowers: Flower[];
   onNavigateToCatalog: () => void;
   onAddReview: (review: any) => void;
+  onLoadMore?: () => void;
+  hasMore?: boolean;
+  isFetchingMore?: boolean;
 }
 
 export const HomePage: React.FC<HomePageProps> = ({
@@ -33,8 +36,35 @@ export const HomePage: React.FC<HomePageProps> = ({
   filteredFlowers,
   onNavigateToCatalog,
   onAddReview,
+  onLoadMore,
+  hasMore,
+  isFetchingMore,
 }) => {
   const hotProducts = flowers.filter((f) => f.isHot);
+
+  // Intersection Observer for infinite scrolling
+  const observerTarget = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore && !isFetchingMore && onLoadMore) {
+          onLoadMore();
+        }
+      },
+      { threshold: 1.0 }
+    );
+
+    if (observerTarget.current) {
+      observer.observe(observerTarget.current);
+    }
+
+    return () => {
+      if (observerTarget.current) {
+        observer.unobserve(observerTarget.current);
+      }
+    };
+  }, [observerTarget.current, hasMore, isFetchingMore, onLoadMore]);
 
   return (
     <div className="space-y-12">
