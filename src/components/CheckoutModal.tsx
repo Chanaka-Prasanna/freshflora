@@ -22,22 +22,30 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   const [step, setStep] = useState<'shipping' | 'payment' | 'processing' | 'success'>('shipping');
 
   // Form states
-  const [recipientName, setRecipientName] = useState('Sanduni Fernando');
-  const [streetAddress, setStreetAddress] = useState('742 Evergreen Terrace');
-  const [city, setCity] = useState('Springfield');
-  const [postalCode, setPostalCode] = useState('97477');
-  const [deliveryDate, setDeliveryDate] = useState('2026-08-05');
-  const [deliveryInstructions, setDeliveryInstructions] = useState('Please leave near the front door in the shade.');
+  const [recipientName, setRecipientName] = useState('');
+  const [streetAddress, setStreetAddress] = useState('');
+  const [city, setCity] = useState('');
+  const [postalCode, setPostalCode] = useState('');
+  const [deliveryDate, setDeliveryDate] = useState('');
+  const [deliveryInstructions, setDeliveryInstructions] = useState('');
 
   // Card states (Dummy Mock)
-  const [cardName, setCardName] = useState('Sanduni Fernando');
-  const [cardNumber, setCardNumber] = useState('4532 •••• •••• 8892');
-  const [cardExpiry, setCardExpiry] = useState('08/28');
-  const [cardCvc, setCardCvc] = useState('882');
+  const [cardName, setCardName] = useState('');
+  const [cardNumber, setCardNumber] = useState('');
+  const [cardExpiry, setCardExpiry] = useState('');
+  const [cardCvc, setCardCvc] = useState('');
 
   // Processing simulation state
   const [processingStatus, setProcessingStatus] = useState('Encrypting transaction payload...');
   const [completedOrder, setCompletedOrder] = useState<Order | null>(null);
+
+  React.useEffect(() => {
+    if (isOpen) {
+      setStep('shipping');
+      setCompletedOrder(null);
+      setProcessingStatus('Encrypting transaction payload...');
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -53,8 +61,9 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let val = e.target.value.replace(/\D/g, '');
     val = val.substring(0, 16);
-    const formatted = val.replace(/(\d{4})/g, 'Rs. 100 ').trim();
-    setCardNumber(formatted || '4532 ');
+    const matches = val.match(/\d{1,4}/g);
+    const formatted = matches ? matches.join(' ') : '';
+    setCardNumber(formatted || '');
   };
 
   const handleCardExpiryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -186,6 +195,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 <input
                   type="text"
                   required
+                  placeholder="e.g. Sanduni Fernando"
                   value={recipientName}
                   onChange={(e) => setRecipientName(e.target.value)}
                   className="w-full text-xs p-3 rounded-xl border border-[#F8D7E3] bg-white text-[#2D232E] focus:outline-none focus:ring-2 focus:ring-[#C83863]/30"
@@ -200,6 +210,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                   <input
                     type="text"
                     required
+                    placeholder="e.g. 742 Evergreen Terrace"
                     value={streetAddress}
                     onChange={(e) => setStreetAddress(e.target.value)}
                     className="w-full text-xs p-3 rounded-xl border border-[#F8D7E3] bg-white text-[#2D232E] focus:outline-none focus:ring-2 focus:ring-[#C83863]/30"
@@ -213,6 +224,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                   <input
                     type="text"
                     required
+                    placeholder="e.g. Springfield"
                     value={city}
                     onChange={(e) => setCity(e.target.value)}
                     className="w-full text-xs p-3 rounded-xl border border-[#F8D7E3] bg-white text-[#2D232E] focus:outline-none focus:ring-2 focus:ring-[#C83863]/30"
@@ -228,6 +240,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                   <input
                     type="text"
                     required
+                    placeholder="e.g. 97477"
                     value={postalCode}
                     onChange={(e) => setPostalCode(e.target.value)}
                     className="w-full text-xs p-3 rounded-xl border border-[#F8D7E3] bg-white text-[#2D232E] focus:outline-none focus:ring-2 focus:ring-[#C83863]/30"
@@ -325,6 +338,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 <input
                   type="text"
                   required
+                  placeholder="e.g. Nimal Perera"
                   value={cardName}
                   onChange={(e) => setCardName(e.target.value)}
                   className="w-full text-xs p-3 rounded-xl border border-[#F8D7E3] bg-white text-[#2D232E] focus:outline-none focus:ring-2 focus:ring-[#C83863]/30"
@@ -338,6 +352,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
                 <input
                   type="text"
                   required
+                  placeholder="e.g. 4532 1234 5678 8892"
                   value={cardNumber}
                   onChange={handleCardNumberChange}
                   maxLength={19}

@@ -82,10 +82,16 @@ export default function App() {
     }
   });
 
+  const [checkoutInitiatedFromBuyNow, setCheckoutInitiatedFromBuyNow] = useState(false);
+  const [cartBeforeCheckout, setCartBeforeCheckout] = useState<CartItem[] | null>(null);
+
   const handleLogin = (newUser: User) => {
     setUser(newUser);
     try {
       localStorage.setItem('freshflora_user', JSON.stringify(newUser));
+      if (checkoutInitiatedFromBuyNow) {
+        setCheckoutModalOpen(true);
+      }
     } catch (e) {
       console.error(e);
     }
@@ -198,6 +204,9 @@ export default function App() {
   };
 
   const handleBuyNow = (flower: Flower, selectedVase = false, customNote = '') => {
+    setCartBeforeCheckout([...cartItems]);
+    setCheckoutInitiatedFromBuyNow(true);
+
     handleAddToCart(flower, selectedVase, customNote);
     setCartDrawerOpen(false);
     if (!user) {
@@ -237,9 +246,30 @@ export default function App() {
     setAuthModalOpen(true);
   };
 
+  const handleCheckoutClose = () => {
+    setCheckoutModalOpen(false);
+    if (checkoutInitiatedFromBuyNow && cartBeforeCheckout !== null) {
+      setCartItems(cartBeforeCheckout);
+    }
+    setCheckoutInitiatedFromBuyNow(false);
+    setCartBeforeCheckout(null);
+  };
+
+  const handleAuthModalClose = () => {
+    setAuthModalOpen(false);
+    if (checkoutInitiatedFromBuyNow && cartBeforeCheckout !== null) {
+      setCartItems(cartBeforeCheckout);
+    }
+    setCheckoutInitiatedFromBuyNow(false);
+    setCartBeforeCheckout(null);
+  };
+
   const handleOrderComplete = (order: Order) => {
-    // Clear cart on successful mock payment
+    // Clear cart on successful payment
     setCartItems([]);
+    localStorage.removeItem('freshflora_cart');
+    setCheckoutInitiatedFromBuyNow(false);
+    setCartBeforeCheckout(null);
   };
 
   return (
@@ -334,7 +364,7 @@ export default function App() {
       {/* Card Checkout Payment Modal (Dummy Mock Sandbox) */}
       <CheckoutModal
         isOpen={checkoutModalOpen}
-        onClose={() => setCheckoutModalOpen(false)}
+        onClose={handleCheckoutClose}
         cartItems={cartItems}
         appliedDiscount={appliedDiscount}
         onOrderComplete={handleOrderComplete}
@@ -344,7 +374,7 @@ export default function App() {
       {/* Sign In / Sign Up Auth Modal */}
       <AuthModal
         isOpen={authModalOpen}
-        onClose={() => setAuthModalOpen(false)}
+        onClose={handleAuthModalClose}
         currentUser={user}
         onLogin={handleLogin}
         onLogout={handleLogout}
