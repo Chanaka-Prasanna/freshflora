@@ -104,14 +104,24 @@ export const api = {
     }));
   },
 
-  // Orders
   createOrder: async (orderData: { total_amount: number, items: any[] }) => {
     const response = await fetch(`${API_BASE_URL}/orders`, {
       method: 'POST',
       headers: getHeaders(),
       body: JSON.stringify(orderData),
     });
-    if (!response.ok) throw new Error('Failed to create order');
+    if (!response.ok) {
+      if (response.status === 401) {
+        throw new Error('Please login to place an order!');
+      }
+      const errText = await response.text();
+      try {
+        const errObj = JSON.parse(errText);
+        throw new Error(errObj.detail || 'Failed to create order');
+      } catch {
+        throw new Error(errText || 'Failed to create order');
+      }
+    }
     return response.json();
   },
 

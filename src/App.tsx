@@ -73,6 +73,8 @@ export default function App() {
   // Auth User
   const [user, setUser] = useState<User | null>(() => {
     try {
+      const token = localStorage.getItem('freshflora_token');
+      if (!token) return null;
       const saved = localStorage.getItem('freshflora_user');
       return saved ? JSON.parse(saved) : null;
     } catch {
@@ -92,6 +94,7 @@ export default function App() {
   const handleLogout = () => {
     setUser(null);
     localStorage.removeItem('freshflora_user');
+    localStorage.removeItem('freshflora_token');
   };
 
   // Reviews State
@@ -197,7 +200,11 @@ export default function App() {
   const handleBuyNow = (flower: Flower, selectedVase = false, customNote = '') => {
     handleAddToCart(flower, selectedVase, customNote);
     setCartDrawerOpen(false);
-    setCheckoutModalOpen(true);
+    if (!user) {
+      setAuthModalOpen(true);
+    } else {
+      setCheckoutModalOpen(true);
+    }
   };
 
   const handleUpdateCartQuantity = (flowerId: string, quantity: number) => {
@@ -215,9 +222,19 @@ export default function App() {
   };
 
   const handleProceedToCheckout = (discountAmount: number, promoCode: string) => {
+    if (!user) {
+      setAuthModalOpen(true);
+      return;
+    }
     setAppliedDiscount(discountAmount);
     setCartDrawerOpen(false);
     setCheckoutModalOpen(true);
+  };
+
+  const handleAuthError = () => {
+    handleLogout();
+    setCheckoutModalOpen(false);
+    setAuthModalOpen(true);
   };
 
   const handleOrderComplete = (order: Order) => {
@@ -321,6 +338,7 @@ export default function App() {
         cartItems={cartItems}
         appliedDiscount={appliedDiscount}
         onOrderComplete={handleOrderComplete}
+        onAuthError={handleAuthError}
       />
 
       {/* Sign In / Sign Up Auth Modal */}

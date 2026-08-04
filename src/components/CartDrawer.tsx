@@ -29,18 +29,18 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   // Price calculations
   const calculateSubtotal = () => {
     return cartItems.reduce((sum, item) => {
-      const itemPrice = item.flower.price + (item.selectedVase ? 14 : 0);
+      const itemPrice = item.flower.price + (item.selectedVase ? 1400 : 0);
       return sum + itemPrice * item.quantity;
     }, 0);
   };
 
   const subtotal = calculateSubtotal();
-  const freeShippingThreshold = 60.00;
+  const freeShippingThreshold = 5000.00;
   const amountForFreeShipping = Math.max(0, freeShippingThreshold - subtotal);
   const freeShippingProgress = Math.min(100, (subtotal / freeShippingThreshold) * 100);
 
   const discountAmount = (subtotal * discountPercent) / 100;
-  const shippingFee = subtotal >= freeShippingThreshold || subtotal === 0 ? 0 : 7.99;
+  const shippingFee = subtotal >= freeShippingThreshold || subtotal === 0 ? 0 : 350;
   const grandTotal = Math.max(0, subtotal - discountAmount + shippingFee);
 
   const handleApplyPromo = (e: React.FormEvent) => {
@@ -129,7 +129,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               </div>
             ) : (
               cartItems.map((item) => {
-                const itemUnitPrice = item.flower.price + (item.selectedVase ? 14 : 0);
+                const itemUnitPrice = item.flower.price + (item.selectedVase ? 1400 : 0);
                 return (
                   <div 
                     key={item.flower.id}
@@ -256,7 +256,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
                 <div className="flex justify-between">
                   <span>Estimated Shipping</span>
-                  <span>{shippingFee === 0 ? <strong className="text-[#2E7D32]">FREE</strong> : `$${shippingFee.toFixed(2)}`}</span>
+                  <span>{shippingFee === 0 ? <strong className="text-[#2E7D32]">FREE</strong> : `Rs. ${shippingFee.toFixed(2)}`}</span>
                 </div>
 
                 <div className="flex justify-between font-serif text-base font-bold text-[#3D1E28] pt-2 border-t border-[#F8D7E3]">
